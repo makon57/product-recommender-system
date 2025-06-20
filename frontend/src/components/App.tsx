@@ -1,15 +1,13 @@
-import { PageSection, Title } from "@patternfly/react-core";
-// import { CardBasic } from "./carouselCard";
-import Responsive from "./carousel";
+import { PageSection} from "@patternfly/react-core";
+import { CardBasic } from "./carouselCard";
 
 
 export function App() {
   return (
     <>
       <PageSection hasBodyWrapper={false}>
-         {/* <CardBasic /> */}
-         <Title headingLevel={"h1"}>Product Recommendations</Title>
-        <Responsive />
+         <CardBasic />
+         <CardBasic />
       </PageSection>
     </>
   );
