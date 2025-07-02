@@ -1,14 +1,14 @@
 import { faker } from "@faker-js/faker";
 import type { ProductData } from "../types";
 
-export function FakerProducts() {
+export function FakerProducts(number: number) {
   function capitalizeFirstLetter(val: string) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   }
 
   function createRandomProducts() {
     const myProduct: ProductData = {
-      id: faker.number.int(),
+      id: 1,
       title: capitalizeFirstLetter(
         faker.word.noun({ length: { min: 5, max: 7 } })
       ),
@@ -21,7 +21,7 @@ export function FakerProducts() {
   }
 
   const fakerData = faker.helpers.multiple(createRandomProducts, {
-    count: 10,
+    count: number,
   });
 
   return fakerData;

@@ -16,6 +16,8 @@ import { Route as SearchImport } from './routes/search'
 import { Route as LoginImport } from './routes/login'
 import { Route as AccountImport } from './routes/account'
 import { Route as IndexImport } from './routes/index'
+import { Route as ProductIndexImport } from './routes/product/index'
+import { Route as ProductProductIdImport } from './routes/product/$productId'
 
 // Create/Update Routes
 
@@ -46,6 +48,18 @@ const AccountRoute = AccountImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProductIndexRoute = ProductIndexImport.update({
+  id: '/product/',
+  path: '/product/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProductProductIdRoute = ProductProductIdImport.update({
+  id: '/product/$productId',
+  path: '/product/$productId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -88,6 +102,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
+    '/product/$productId': {
+      id: '/product/$productId'
+      path: '/product/$productId'
+      fullPath: '/product/$productId'
+      preLoaderRoute: typeof ProductProductIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/product/': {
+      id: '/product/'
+      path: '/product'
+      fullPath: '/product'
+      preLoaderRoute: typeof ProductIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -99,6 +127,8 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/search': typeof SearchRoute
   '/signup': typeof SignupRoute
+  '/product/$productId': typeof ProductProductIdRoute
+  '/product': typeof ProductIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -107,6 +137,8 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/search': typeof SearchRoute
   '/signup': typeof SignupRoute
+  '/product/$productId': typeof ProductProductIdRoute
+  '/product': typeof ProductIndexRoute
 }
 
 export interface FileRoutesById {
@@ -116,14 +148,38 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/search': typeof SearchRoute
   '/signup': typeof SignupRoute
+  '/product/$productId': typeof ProductProductIdRoute
+  '/product/': typeof ProductIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/account' | '/login' | '/search' | '/signup'
+  fullPaths:
+    | '/'
+    | '/account'
+    | '/login'
+    | '/search'
+    | '/signup'
+    | '/product/$productId'
+    | '/product'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/account' | '/login' | '/search' | '/signup'
-  id: '__root__' | '/' | '/account' | '/login' | '/search' | '/signup'
+  to:
+    | '/'
+    | '/account'
+    | '/login'
+    | '/search'
+    | '/signup'
+    | '/product/$productId'
+    | '/product'
+  id:
+    | '__root__'
+    | '/'
+    | '/account'
+    | '/login'
+    | '/search'
+    | '/signup'
+    | '/product/$productId'
+    | '/product/'
   fileRoutesById: FileRoutesById
 }
 
@@ -133,6 +189,8 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   SearchRoute: typeof SearchRoute
   SignupRoute: typeof SignupRoute
+  ProductProductIdRoute: typeof ProductProductIdRoute
+  ProductIndexRoute: typeof ProductIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -141,6 +199,8 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   SearchRoute: SearchRoute,
   SignupRoute: SignupRoute,
+  ProductProductIdRoute: ProductProductIdRoute,
+  ProductIndexRoute: ProductIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -157,7 +217,9 @@ export const routeTree = rootRoute
         "/account",
         "/login",
         "/search",
-        "/signup"
+        "/signup",
+        "/product/$productId",
+        "/product/"
       ]
     },
     "/": {
@@ -174,6 +236,12 @@ export const routeTree = rootRoute
     },
     "/signup": {
       "filePath": "signup.tsx"
+    },
+    "/product/$productId": {
+      "filePath": "product/$productId.tsx"
+    },
+    "/product/": {
+      "filePath": "product/index.tsx"
     }
   }
 }
