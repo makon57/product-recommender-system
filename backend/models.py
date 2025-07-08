@@ -11,18 +11,17 @@ class InteractionType(Enum):
     RATE = 'rate'
 
 class Product(BaseModel):
-    item_id: int
-    name: str
+    item_id: str  
+    product_name: str
     category: str
-    subcategory: str
-    price: float
-    avg_rating: float
-    num_ratings: int
-    popular: float
-    new_arrival: float
-    on_sale: float
-    arrival_date: date
-    description: str
+    about_product: Optional[str]
+    img_link: Optional[str]
+    discount_percentage: Optional[float]
+    discounted_price: Optional[float]
+    actual_price: float
+    product_link: Optional[str]
+    rating_count: Optional[int]
+    rating: Optional[float]
 
 class User(BaseModel):
     user_id: str  

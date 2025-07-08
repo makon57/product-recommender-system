@@ -23,7 +23,7 @@ async def search_products_by_image(image):
     return []
 
 @router.get("/products/{product_id}", response_model=Product)
-async def get_product(product_id: int, user_id: str = 1):
+async def get_product(product_id: int, user_id: str):
     """
     Get product details by ID
     """

@@ -99,18 +99,17 @@ class FeastService:
         print(suggested_item.columns)
         print(suggested_item)
         suggested_item = [Product(
-            item_id=row.item_id,
-            name=row.name,
-            category=row.category,
-            subcategory=row.subcategory,
-            price=row.price,
-            avg_rating=row.avg_rating,
-            num_ratings=row.num_ratings,
-            popular=row.popular,
-            new_arrival=row.new_arrival,
-            on_sale=row.on_sale,
-            arrival_date=row.arrival_date,
-            description=row.description
+        item_id=row.item_id,
+        product_name=row.product_name,
+        category=row.category,
+        about_product=getattr(row, "about_product", None),
+        img_link=getattr(row, "img_link", None),
+        discount_percentage=getattr(row, "discount_percentage", None),
+        discounted_price=getattr(row, "discounted_price", None),
+        actual_price=row.actual_price,
+        product_link=getattr(row, "product_link", None),
+        rating_count=getattr(row, "rating_count", None),
+        rating=getattr(row, "rating", None),
         ) for row in suggested_item.itertuples()]
         return suggested_item
 
