@@ -1,4 +1,4 @@
-import Slider from "react-slick";
+import Slider, { type Settings } from "react-slick";
 import { ProductCard } from "../product-card";
 import AngleLeftIcon from "@patternfly/react-icons/dist/esm/icons/angle-left-icon";
 import AngleRightIcon from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
@@ -8,17 +8,11 @@ import "./carousel.css";
 import { Button } from "@patternfly/react-core";
 import type { ProductData } from "../../types";
 
-interface ProductDictionary {
-  [key: string]: ProductData[];
-}
-
 interface ArrowProps {
   onClick?: () => void;
 }
 
-export const Carousel: React.FunctionComponent<ProductDictionary> = ({
-  products,
-}) => {
+export const Carousel = ({ products }: { products: ProductData[] }) => {
   function NextArrow(props: ArrowProps) {
     const { onClick } = props;
     return (
@@ -37,7 +31,7 @@ export const Carousel: React.FunctionComponent<ProductDictionary> = ({
     );
   }
 
-  const settings = {
+  const settings: Settings = {
     dots: true,
     infinite: false,
     speed: 500,
@@ -76,12 +70,9 @@ export const Carousel: React.FunctionComponent<ProductDictionary> = ({
 
   return (
     <div className="slider-container">
-      <Slider {...settings}>
-        {Object.values(products).map((product, index) => (
-          <div
-            className="cards-container"
-            key={index}
-          >
+      <Slider className="" {...settings}>
+        {products.map((product, index) => (
+          <div className="pf-v6-u-p-sm" key={index}>
             <ProductCard product={product} index={index} />
           </div>
         ))}

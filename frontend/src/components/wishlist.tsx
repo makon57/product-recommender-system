@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { FakerProducts } from "./faker-products";
 
 export function Wishlist() {
-  const { data, error, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["wishlist"], // A unique key for this query
     queryFn: fetchWishlist, // The async function to fetch data
   });

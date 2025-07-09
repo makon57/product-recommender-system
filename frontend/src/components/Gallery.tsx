@@ -3,21 +3,14 @@ import { ProductCard } from "./product-card";
 import "./Carousel/carousel.css";
 import type { ProductData } from "../types";
 
-interface ProductDictionary {
-  [key: string]: ProductData[];
-}
-
-export const GalleryView: React.FunctionComponent<ProductDictionary> = ({
+export const GalleryView = ({
   products,
-}) => {
+}: {products: ProductData[]}) => {
   return (
     <div className="gallery-container">
       <Gallery hasGutter>
-        {Object.values(products).map((product, index) => (
-          <GalleryItem
-            className="cards-container"
-            key={index}
-          >
+        {products.map((product, index) => (
+          <GalleryItem>
             <ProductCard product={product} index={index} />
           </GalleryItem>
         ))}

@@ -9,9 +9,8 @@ export const fetchRecommendations = async (): Promise<ProductData[]> => {
   return data as ProductData[];
 };
 
-export const fetchWishlist= async (user_id: string): Promise<ProductData[]> => {
-  // sleep 3000ms
-  await new Promise(resolve => setTimeout(resolve, 3000));
+export const fetchWishlist= async (): Promise<ProductData[]> => {
+  const user_id = "user1"
   const response = await fetch(`/api/wishlist/${user_id}`);
   if (!response.ok) {
     throw new Error('Network response was not ok');
