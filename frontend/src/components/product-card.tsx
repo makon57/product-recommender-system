@@ -43,7 +43,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
       <CardHeader
         className="v6-featured-posts-card-header-img"
         selectableActions={{
-          to: "#",
+          to: `/product/${product.id}`,
           selectableActionId: actionId,
           selectableActionAriaLabelledby: cardTitleId,
           name: "homepage-card",
