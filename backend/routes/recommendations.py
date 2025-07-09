@@ -12,7 +12,7 @@ router = APIRouter()
 
 # GET for existing users
 @router.get("/recommendations/{user_id}", response_model=List[Product])
-def get_recommendations(user_id: int):
+def get_recommendations(user_id: str):
     try:
         return feast_service.load_items_existing_user(user_id)
     except Exception as e:

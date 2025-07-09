@@ -40,7 +40,7 @@ async def get_current_user(
         sub = payload.get("sub")
         if sub is None:
             raise credentials_exception
-        user_id = int(sub)
+        user_id = str(sub)
     except (JWTError, ValueError):
         raise credentials_exception
     result = await db.execute(select(User).where(User.user_id == user_id))

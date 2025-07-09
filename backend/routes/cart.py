@@ -6,7 +6,7 @@ from services.kafka_service import kafka_service
 router = APIRouter()
 
 @router.get("/cart/{user_id}", response_model=List[CartItem])
-def get_cart(user_id: int):
+def get_cart(user_id: str):
     return []
 
 @router.post("/cart", status_code=204)

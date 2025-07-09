@@ -5,7 +5,7 @@ from models import WishlistItem, Product
 router = APIRouter()
 
 @router.get("/wishlist/{user_id}", response_model=List[Product])
-def get_wishlist(user_id: int):
+def get_wishlist(user_id: str):
     return []
 
 @router.post("/wishlist", status_code=204)

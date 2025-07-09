@@ -1,4 +1,4 @@
-FROM quay.io/ecosystem-appeng/rec-sys-app:0.0.43 AS algo-repo
+FROM quay.io/ecosystem-appeng/rec-sys-app:0.0.44 AS algo-repo
 
 FROM registry.access.redhat.com/ubi9/python-311
 
@@ -19,7 +19,7 @@ COPY . .
 COPY --from=algo-repo /app/models/ public/models/
 COPY --from=algo-repo /app/service/ public/service/
 COPY --from=algo-repo /app/feature_repo/feature_store.yaml public/feature_store.yaml
-COPY --from=algo-repo /app/feature_repo/data /app/data
+COPY --from=algo-repo /app/feature_repo/data public/data
 
 RUN chmod -R +r . && ls -la
 

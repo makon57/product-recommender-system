@@ -21,5 +21,5 @@ def checkout(request: CheckoutRequest):
     )
 
 @router.get("/orders/{user_id}", response_model=List[Order])
-def get_order_history(user_id: int):
+def get_order_history(user_id: str):
     return []

@@ -69,3 +69,52 @@ Create the name of the service account to use
 - name: FEAST_REGISTRY_URL
   value: {{ .Values.feast.registry }}.{{ .Release.Namespace }}.svc.cluster.local
 {{- end }}
+
+{{/*
+Define the pipeline job template that can be reused in both Job and CronJob
+*/}}
+{{- define "product-recommender-system.pipeline-job-template" -}}
+metadata:
+  labels:
+    pipelines.kubeflow.org/v2_component: 'true'
+spec:
+  serviceAccountName: pipeline-runner-dspa    
+  initContainers:
+    - name: wait-for-pipeline
+      image: {{ .Values.pipelineJobImage }}
+      command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+          url="https://ds-pipeline-dspa:8888/apis/v2beta1/healthz"
+          echo "Waiting for $url..."
+          until curl -ksf "$url"; do
+            echo "Still waiting for $url ..."
+            sleep 10
+          done
+          echo "Data science pipeline configured"
+  containers:
+  - name: kfp-runner
+    image: {{ .Values.pipelineJobImage }}
+    imagePullPolicy: Always
+    env:
+      - name: PIPELINE_NAME
+        value: 'batch_training'
+      - name: EXPERIMENT_NAME
+        value: 'Default'
+      - name: RUN_NAME
+        value: '1'
+      - name: DS_PIPELINE_URL
+        value: https://ds-pipeline-dspa.{{ .Release.Namespace }}.svc.cluster.local:8888
+      - name: DB_SECRET_NAME
+        value: pgvector
+      - name: MINIO_SECRET_NAME
+        value: ds-pipeline-s3-dspa
+      - name: BASE_REC_SYS_IMAGE
+        value: {{ .Values.applicationImage }}
+    {{- include "product-recommender-system.feastEnv" . | nindent 6 }}
+    command: ['/bin/sh']
+    args: ['-c', './entrypoint.sh']
+  restartPolicy: Never
+{{- end }}

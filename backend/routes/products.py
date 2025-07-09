@@ -23,7 +23,7 @@ async def search_products_by_image(image):
     return []
 
 @router.get("/products/{product_id}", response_model=Product)
-async def get_product(product_id: int, user_id: int = 1):
+async def get_product(product_id: int, user_id: str = 1):
     """
     Get product details by ID
     """
@@ -38,7 +38,7 @@ async def get_product(product_id: int, user_id: int = 1):
     raise HTTPException(status_code=501, detail="Not implemented")
 
 @router.post("/products/{product_id}/interactions/click", status_code=204)
-async def record_product_click(product_id: int, user_id: int):
+async def record_product_click(product_id: int, user_id: str):
     """
     Records a product click interaction event
     """

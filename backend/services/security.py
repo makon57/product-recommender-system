@@ -4,7 +4,7 @@ from jose import jwt
 from datetime import datetime, timedelta
 import os
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__rounds=6)
 SECRET_KEY = os.getenv("SECRET_KEY", "supersecret")  
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 1 day

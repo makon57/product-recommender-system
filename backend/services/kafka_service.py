@@ -6,13 +6,13 @@ from typing import Optional, Dict, Any, Union
 
 class KafkaService:
     _instance = None
-    
+
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(KafkaService, cls).__new__(cls)
             cls._instance._initialize()
         return cls._instance
-    
+
     def _initialize(self):
         """Initialize the Kafka producer"""
         kafka_service = os.getenv("KAFKA_SERVICE_ADDR", 'rec-sys-cluster-kafka-bootstrap.rec-sys.svc.cluster.local:9092')
@@ -20,14 +20,14 @@ class KafkaService:
             bootstrap_servers=kafka_service,
             value_serializer=lambda v: json.dumps(v).encode('utf-8')
         )
-    
+
     def _build_interaction_schema(self) -> Dict[str, Any]:
         """Build the schema for interaction messages"""
         return {
             "type": "struct",
             "fields": [{
                 "field": "user_id",
-                "type": "int32",
+                "type": "string", 
                 "optional": False,
             }, {
                 "field": "item_id",
@@ -66,7 +66,7 @@ class KafkaService:
             "optional": False,
             "name": "interaction"
         }
-    
+
     def _build_new_user_schema(self) -> Dict[str, Any]:
         """Build the schema for new user messages"""
         return {
@@ -92,22 +92,23 @@ class KafkaService:
             "optional": False,
             "name": "new-users"
         }
-    
-    def send_interaction(self, user_id: int, item_id: int, interaction_type: str, 
-                        rating: Optional[int] = None, quantity: Optional[int] = None,
-                        review_title: Optional[str] = None,
-                        review_content: Optional[str] = None) -> None:
+
+    def send_interaction(self, user_id: str, item_id: int, interaction_type: str,
+                         rating: Optional[int] = None, quantity: Optional[int] = None,
+                         review_title: Optional[str] = None,
+                         review_content: Optional[str] = None) -> None:
         """Send an interaction event to Kafka"""
         schema = self._build_interaction_schema()
         interaction = {
-            'user_id': user_id,
+            'user_id': str(user_id),  
             'item_id': item_id,
             'timestamp': datetime.now().isoformat(" "),
             'interaction_type': interaction_type,
             'rating': int(rating) if rating is not None else None,
             'quantity': int(quantity) if quantity is not None else None,
             'review_title': review_title if review_title is not None else '',
-            'review_content': review_content if review_content is not None else ''
+            'review_content': review_content if review_content is not None else '',
+            'interaction_id': f"{user_id}-{item_id}-{datetime.utcnow().timestamp()}"  # example unique ID
         }
         message = {
             "schema": schema,
@@ -115,7 +116,7 @@ class KafkaService:
         }
         self.producer.send('interactions', message)
         self.producer.flush()
-    
+
     def send_new_user(self, user_id: Union[int, str], user_name: str, preferences: str) -> None:
         """Send a new user event to Kafka"""
         schema = self._build_new_user_schema()
@@ -132,5 +133,6 @@ class KafkaService:
         self.producer.send('new-users', message)
         self.producer.flush()
 
-# Initilaize the singleton
-kafka_service = KafkaService() 
+
+# Initialize the singleton
+kafka_service = KafkaService()
