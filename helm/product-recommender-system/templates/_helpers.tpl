@@ -113,6 +113,10 @@ spec:
         value: ds-pipeline-s3-dspa
       - name: BASE_REC_SYS_IMAGE
         value: {{ .Values.applicationImage }}
+      - name: MODEL_REGISTRY_NAMESPACE
+        value: {{ .Values.modelRegistry.namespace }}
+      - name: MODEL_REGISTRY_CONTAINER
+        value: {{ .Values.modelRegistry.name }}
     {{- include "product-recommender-system.feastEnv" . | nindent 6 }}
     command: ['/bin/sh']
     args: ['-c', './entrypoint.sh']
