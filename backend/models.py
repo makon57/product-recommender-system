@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List, Optional
 from datetime import date, datetime
 from enum import Enum
@@ -30,7 +30,9 @@ class User(BaseModel):
     gender: str
     signup_date: date
     preferences: str
-    views: Optional[List[Product]] = None
+    views: Optional[List['Product']] = None  # quotes avoid circular import issues
+
+    model_config = ConfigDict(from_attributes=True)
 
 class Feedback(BaseModel):
     userId: str  

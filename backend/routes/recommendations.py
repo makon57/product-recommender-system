@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from pydantic import BaseModel
-
+from models import User as UserSchema  # Pydantic User
 from models import Product
 from database.models_sql import User
 from services.feast_service import FeastService
@@ -28,9 +28,10 @@ class NewUserRecommendationRequest(BaseModel):
 @router.post("/recommendations", response_model=List[Product])
 async def recommend_for_new_user(
     payload: NewUserRecommendationRequest,
-    user: User = Depends(get_current_user)
+    user: User = Depends(get_current_user)  # SQLAlchemy User
 ):
     try:
-        return FeastService().load_items_new_user(user, k=payload.num_recommendations)
+        user_pydantic = UserSchema.model_validate(user)
+        return FeastService().load_items_new_user(user_pydantic, k=payload.num_recommendations)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

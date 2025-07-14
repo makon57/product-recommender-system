@@ -10,10 +10,10 @@ import {
 } from "@patternfly/react-core";
 import { SingleFakerProducts } from "./faker-products";
 import StarRatings from "react-star-ratings";
-import { editCart, fetchProduct } from "../services/products";
+import type { CartItem } from "../types";
+import { fetchProduct } from "../services/products";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Route } from "../routes/product/$productId";
-import { userId } from "../routes/account";
 
 export const ProductDetails = () => {
   // loads productId from route /product/$productId
@@ -29,12 +29,12 @@ export const ProductDetails = () => {
   });
 
   // Delete after testing - faker condition
-  const product = SingleFakerProducts();
+  const product = data ? data : SingleFakerProducts();
 
   // // Mutation for adding product to cart
-  const handleAddToCart = useMutation({ mutationFn: editCart })
+  const handleAddToCart = useMutation<CartItem>({ mutationFn: postProduct(CartItem) })
 
- // Mutation for buying product now
+  // Mutation for buying product now
   const handleBuyNow = () => {
     alert(product[0].title);
   };
@@ -42,7 +42,7 @@ export const ProductDetails = () => {
   return (
     <>
       {isLoading ? (
-        <Skeleton style={{ flex: 1, minWidth: 0, height: "100%" }} />
+        <Skeleton style={{ height: 200 }} />
       ) : (
         <>
           <FlexItem style={{ flex: 1, minWidth: 0, height: "100%" }}>
@@ -86,7 +86,7 @@ export const ProductDetails = () => {
               <CardFooter>
                 <Flex>
                   <FlexItem>
-                    <Button variant="secondary" onClick={() => handleAddToCart.mutate({ userId, productId })}>
+                    <Button variant="secondary" onClick={handleAddToCart}>
                       Add to Cart
                     </Button>
                   </FlexItem>

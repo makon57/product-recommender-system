@@ -91,7 +91,9 @@ class FeastService:
             top_k=k,
             features=['item_embedding:item_id']
         )
-        top_item_ids = top_k.to_df().iloc[0]['top_k_item_ids']
+        print("Retrieved documents from store:", top_k.to_df())
+        top_item_ids = top_k.to_df()['item_id'].tolist()
+        #top_item_ids = top_k.to_df().iloc[0]['top_k_item_ids']
         return self._item_ids_to_product_list(top_item_ids)
 
     def _item_ids_to_product_list(self, top_item_ids: pd.Series | List) -> List[Product]:
