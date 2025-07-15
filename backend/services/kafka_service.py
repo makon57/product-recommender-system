@@ -132,7 +132,3 @@ class KafkaService:
         }
         self.producer.send('new-users', message)
         self.producer.flush()
-
-
-# Initialize the singleton
-kafka_service = KafkaService()

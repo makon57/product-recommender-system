@@ -9,7 +9,7 @@ from datetime import date
 from models import SignUpRequest, LoginRequest, AuthResponse, User as UserResponse
 from database.models_sql import User
 from database.db import get_db
-from services.kafka_service import kafka_service  # Kafka send
+from services.kafka_service import KafkaService  # Kafka send
 from services.security import (
     hash_password,
     verify_password,
@@ -81,7 +81,7 @@ async def signup(
     await db.refresh(user)
 
     # Send Kafka new-user event
-    kafka_service.send_new_user(
+    KafkaService().send_new_user(
         user_id=user.user_id,
         user_name=user.email,
         preferences=user.preferences,

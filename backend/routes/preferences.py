@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from pydantic import BaseModel
 from database.models_sql import User
-from services.kafka_service import kafka_service
+from services.kafka_service import KafkaService
 from routes.auth import get_current_user
 from models import AuthResponse, User as UserResponse
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -37,7 +37,7 @@ async def set_preferences(
     await db.refresh(user)
 
     # Notify Kafka
-    kafka_service.send_new_user(
+    KafkaService().send_new_user(
         user_id=user.user_id,
         user_name=user.email,
         preferences=user.preferences,

@@ -1,10 +1,19 @@
 import pytest
 from httpx import AsyncClient, ASGITransport
-from dotenv import load_dotenv
-load_dotenv(dotenv_path="env/tests.env", override=True)
 from main import app
 from database.db import get_db
 
+
+class FakeFailureSession:
+    async def execute(self, stmt):
+        raise Exception("DB failure")
+
+class FakeSuccessSession:
+    async def execute(self, stmt):
+        assert str(stmt) == "SELECT 1"
+        class Result:
+            def scalar(self): return 1
+        return Result()
 
 @pytest.fixture
 def override_get_db():
@@ -29,13 +38,6 @@ async def test_liveness():
     await run_with_client(inner)
 
 
-class FakeSuccessSession:
-    async def execute(self, stmt):
-        assert str(stmt) == "SELECT 1"
-        class Result:
-            def scalar(self): return 1
-        return Result()
-
 @pytest.mark.asyncio
 async def test_readiness_success(override_get_db):
     override_get_db(FakeSuccessSession)
@@ -47,10 +49,6 @@ async def test_readiness_success(override_get_db):
 
     await run_with_client(inner)
 
-
-class FakeFailureSession:
-    async def execute(self, stmt):
-        raise Exception("DB failure")
 
 @pytest.mark.asyncio
 async def test_readiness_failure(override_get_db):

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
 from models import Product
-from services.kafka_service import kafka_service
+from services.kafka_service import KafkaService
 
 router = APIRouter()
 
@@ -28,7 +28,7 @@ async def get_product(product_id: int, user_id: str):
     Get product details by ID
     """
     # Send view interaction to Kafka
-    kafka_service.send_interaction(
+    KafkaService().send_interaction(
         user_id=user_id,
         item_id=product_id,
         interaction_type='negative_view'
@@ -42,7 +42,7 @@ async def record_product_click(product_id: int, user_id: str):
     """
     Records a product click interaction event
     """
-    kafka_service.send_interaction(
+    KafkaService().send_interaction(
         user_id=user_id,
         item_id=product_id,
         interaction_type='positive_view'

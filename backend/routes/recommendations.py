@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from models import Product
 from database.models_sql import User
-from services.feast_service import feast_service
+from services.feast_service import FeastService
 from routes.auth import get_current_user  # to resolve JWT user
 
 router = APIRouter()
@@ -14,7 +14,7 @@ router = APIRouter()
 @router.get("/recommendations/{user_id}", response_model=List[Product])
 def get_recommendations(user_id: str):
     try:
-        return feast_service.load_items_existing_user(user_id)
+        return FeastService().load_items_existing_user(user_id)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -31,6 +31,6 @@ async def recommend_for_new_user(
     user: User = Depends(get_current_user)
 ):
     try:
-        return feast_service.load_items_new_user(user, k=payload.num_recommendations)
+        return FeastService().load_items_new_user(user, k=payload.num_recommendations)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

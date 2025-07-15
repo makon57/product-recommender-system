@@ -6,9 +6,6 @@ from minio import Minio
 import torch
 import json
 import shutil
-from public.models.entity_tower import EntityTower
-from public.models.data_util import data_preproccess
-from public.service.dataset_provider import LocalDatasetProvider
 from datetime import datetime, timezone
 import pandas as pd
 
@@ -23,6 +20,8 @@ class FeastService:
 
     def __init__(self):
         if not self._initialized:
+            from public.service.dataset_provider import LocalDatasetProvider
+            
             self.store = FeatureStore('public')
             self._initialized = True
             self.user_encoder = self._load_user_encoder()
@@ -42,6 +41,8 @@ class FeastService:
             return version
 
     def _load_user_encoder(self):
+        from public.models.entity_tower import EntityTower
+        
         minio_client = Minio(
             endpoint=os.getenv('MINIO_HOST', "endpoint") + ':' + os.getenv('MINIO_PORT', '9000'),
             access_key=os.getenv('MINIO_ACCESS_KEY', "access-key"),
@@ -81,6 +82,8 @@ class FeastService:
         return self._item_ids_to_product_list(top_item_ids)
 
     def load_items_new_user(self, user: User, k: int = 10):
+        from public.models.data_util import data_preproccess
+        
         user_as_df = pd.DataFrame([user.model_dump()])
         user_embed = self.user_encoder(**data_preproccess(user_as_df))[0]
         top_k = self.store.retrieve_online_documents(
@@ -112,6 +115,3 @@ class FeastService:
         rating=getattr(row, "rating", None),
         ) for row in suggested_item.itertuples()]
         return suggested_item
-
-# Initialize the service
-feast_service = FeastService()

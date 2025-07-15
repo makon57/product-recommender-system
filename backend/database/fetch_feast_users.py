@@ -1,4 +1,4 @@
-from services.feast_service import feast_service
+from services.feast_service import FeastService
 import asyncio
 import random
 import string
@@ -18,7 +18,7 @@ def generate_password(length=10) -> str:
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
 async def seed_users():
-    users: pd.DataFrame = feast_service.get_all_existing_users()
+    users: pd.DataFrame = FeastService().get_all_existing_users()
 
     # Filter out new users (27-digit numeric strings)
     users = users[~(users["user_id"].astype(str).str.isdigit() & (users["user_id"].astype(str).str.len() == 27))]
