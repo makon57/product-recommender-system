@@ -21,6 +21,9 @@ helm_pgvector_args = \
     --set pgvector.secret.password=$(POSTGRES_PASSWORD) \
     --set pgvector.secret.dbname=$(POSTGRES_DBNAME)
 
+dataset_args = \
+	--set datasetUrl=$(DATASET_URL)
+
 # Default target
 .PHONY: help
 help:
@@ -47,9 +50,11 @@ depend:
 .PHONY: install
 install: namespace depend
 	@$(eval PGVECTOR_ARGS := $(call helm_pgvector_args))
+	@$(eval DATASET_ARGS := $(call dataset_args))
 	@echo "Installing $(HELM_CHART) helm chart"
 	@helm -n $(NAMESPACE) upgrade --install $(HELM_CHART) $(HELM_CHART) -n $(NAMESPACE) \
 		$(PGVECTOR_ARGS) \
+		$(DATASET_ARGS) \
 		$(EXTRA_HELM_ARGS) --set strimzi-kafka-operator.createGlobalResources=false --timeout 300m
 	@echo "Waiting for model services and llamastack to deploy. It may take around 10-15 minutes depending on the size of the model..."
 	@oc rollout status deploy

@@ -117,6 +117,8 @@ spec:
         value: {{ .Values.modelRegistry.namespace }}
       - name: MODEL_REGISTRY_CONTAINER
         value: {{ .Values.modelRegistry.name }}
+      - name: DATASET_URL
+        value: {{ .Values.datasetUrl }}
     {{- include "product-recommender-system.feastEnv" . | nindent 6 }}
     command: ['/bin/sh']
     args: ['-c', './entrypoint.sh']
