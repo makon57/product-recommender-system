@@ -4,12 +4,12 @@ This should be run by a job once per cluster.
 """
 
 import asyncio
-from database.db import engine
+from database.db import get_engine
 from database.models_sql import Base
 from database.fetch_feast_users import seed_users
 
 async def create_tables():
-    async with engine.begin() as conn:
+    async with get_engine().begin() as conn:
         # Drop existing tables (dev only)
         await conn.run_sync(Base.metadata.drop_all)
         # Create fresh schema with updated types
