@@ -1,4 +1,4 @@
-import type { ProductData } from "../types";
+import type { CartItem, ProductData } from "../types";
 
 export const fetchRecommendations = async (): Promise<ProductData[]> => {
   const response = await fetch("/api/recommendations");
@@ -6,6 +6,7 @@ export const fetchRecommendations = async (): Promise<ProductData[]> => {
     throw new Error('Network response was not ok');
   }
   const data: unknown = await response.json();
+  console.log(data)
   return data as ProductData[];
 };
 
@@ -37,26 +38,18 @@ export const fetchProduct = async (product_id: string): Promise<ProductData[]> =
   return data as ProductData[];
 };
 
-export const postProduct = async (): Promise<ProductData[]> => {
-  const response = await fetch(`/api/cart`);
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  const data: unknown = await response.json();
-  return data as ProductData[];
-};
-
-export const editProduct = async ({ userId, productId }: CartItems): Promise<Agent> => {
+export const editCart = async (cartItem: CartItem) => {
   const response = await fetch(`/api/cart`, {
-    method: 'PUT',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(agentProps),
+    body: JSON.stringify(cartItem),
   });
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
   const data: unknown = await response.json();
-  return data as Cart;
+  alert(data + "edit data worked");
+  return data as CartItem;
 };

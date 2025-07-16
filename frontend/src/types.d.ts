@@ -11,3 +11,12 @@ export interface CartItem {
   userId: string;
   productId: string;
 }
+
+export interface User {
+  user_id: string,
+  email: string,
+  age: number,
+  gender: string,
+  signup_date: date,
+  preferences: string,
+}

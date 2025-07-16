@@ -11,17 +11,22 @@ import {
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Masthead } from "../components/masthead";
 import { Wishlist } from "../components/wishlist";
+import { getUser } from "../services/auth";
 
-const user = true;
 
 export const Route = createFileRoute("/account")({
-  loader: () => {
-    if (!user) {
-      redirect({
+  loader: async () => {
+    // const userData = await getUser("user_C0VCAR@example.com", "hY9twl7Po5");
+    const userData = await getUser();
+    console.log(userData);
+    // If getUser returns an array, take the first user; otherwise, use as is
+    const user = Array.isArray(userData) ? userData[0] : userData;
+    if (!user?.user_id) {
+      throw redirect({
         to: "/login",
-        throw: true,
       });
     }
+    return { userData: user };
   },
   component: Account,
 });
