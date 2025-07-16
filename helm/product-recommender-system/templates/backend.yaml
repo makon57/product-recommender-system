@@ -176,7 +176,7 @@ spec:
             - |
               until PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -c "SELECT 1 FROM model_version LIMIT 1" > /dev/null 2>&1; do
                 echo "Waiting for model_version table..."
-                sleep 2
+                sleep 10
               done
               echo "model_version table is ready!"
           env:
