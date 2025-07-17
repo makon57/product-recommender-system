@@ -8,49 +8,49 @@ import {
   FlexItem,
   Skeleton,
 } from "@patternfly/react-core";
-import { SingleFakerProducts } from "./faker-products";
 import StarRatings from "react-star-ratings";
-import type { CartItem } from "../types";
-import { fetchProduct } from "../services/products";
+import { editCart, fetchProduct } from "../services/products";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Route } from "../routes/product/$productId";
 
 export const ProductDetails = () => {
   // loads productId from route /product/$productId
-  const { productId } = Route.useLoaderData()
+  const { productId } = Route.useLoaderData();
 
   // Query for product by productId
   const {
-    data,
-    isLoading
+    data: product,
+    isError,
+    isLoading,
   } = useQuery({
     queryKey: ["product", productId], // A unique key for this query
     queryFn: async () => fetchProduct(productId), // The async function to fetch data
   });
 
-  // Delete after testing - faker condition
-  const product = data ? data : SingleFakerProducts();
+  // Mutation for adding product to cart
+  const handleAddToCart = useMutation({ mutationFn: editCart });
 
-  // // Mutation for adding product to cart
-  const handleAddToCart = useMutation<CartItem>({ mutationFn: postProduct(CartItem) })
+  if (isError || !product) {
+    return <div>Error fetching product</div>;
+  }
 
   // Mutation for buying product now
   const handleBuyNow = () => {
-    alert(product[0].title);
+    alert(product.title);
   };
 
   return (
     <>
       {isLoading ? (
-        <Skeleton style={{ height: 200 }} />
+        <Skeleton style={{ flex: 1, minWidth: 0, height: "100%" }} />
       ) : (
         <>
           <FlexItem style={{ flex: 1, minWidth: 0, height: "100%" }}>
             <Card style={{ height: "100%" }}>
               <CardBody style={{ height: "100%", padding: 0 }}>
                 <img
-                  src={product[0].imageUrl}
-                  alt={product[0].title}
+                  src={product.imageUrl}
+                  alt={product.title}
                   style={{
                     width: "100%",
                     height: "100%",
@@ -64,29 +64,34 @@ export const ProductDetails = () => {
           <FlexItem style={{ flex: 1, minWidth: 0, height: "100%" }}>
             <Card isPlain style={{ height: "100%" }}>
               <CardTitle style={{ fontSize: "2rem", fontWeight: "bold" }}>
-                {product[0].title}
+                {product.title}
               </CardTitle>
               <CardBody>
                 <Flex direction={{ default: "column" }}>
                   <FlexItem>
                     <StarRatings
-                      rating={product[0].rating}
+                      rating={product.rating}
                       starRatedColor="black"
                       numberOfStars={5}
                       name="rating"
                       starDimension="18px"
                       starSpacing="1px"
                     />{" "}
-                    {product[0].rating}
+                    {product.rating}
                   </FlexItem>
-                  <FlexItem headers="h1">${product[0].price}</FlexItem>
-                  <FlexItem>{product[0].description}</FlexItem>
+                  <FlexItem headers="h1">${product.price}</FlexItem>
+                  <FlexItem>{product.description}</FlexItem>
                 </Flex>
               </CardBody>
               <CardFooter>
                 <Flex>
                   <FlexItem>
-                    <Button variant="secondary" onClick={handleAddToCart}>
+                    <Button
+                      variant="secondary"
+                      onClick={() =>
+                        handleAddToCart.mutate({ userId, productId })
+                      }
+                    >
                       Add to Cart
                     </Button>
                   </FlexItem>
@@ -103,4 +108,4 @@ export const ProductDetails = () => {
       )}
     </>
   );
-}
+};
