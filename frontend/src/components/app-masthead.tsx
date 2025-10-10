@@ -23,7 +23,7 @@ export function AppMasthead() {
         <ToolbarGroup>
           <ToolbarItem>
             <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Title headingLevel='h4'>Product Recommendations</Title>
+              <Title headingLevel='h2'>Product Recommendations</Title>
             </Link>
           </ToolbarItem>
         </ToolbarGroup>
@@ -45,6 +45,11 @@ export function AppMasthead() {
           <ToolbarItem>
             <CartIcon />
           </ToolbarItem>
+          </ToolbarGroup>
+          <ToolbarGroup
+          variant='action-group'
+          className='pf-v6-u-display-none pf-v6-u-display-block-on-md'
+        >
           <ToolbarItem>
             <UserDropdown />
           </ToolbarItem>

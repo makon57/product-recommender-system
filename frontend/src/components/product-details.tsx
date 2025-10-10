@@ -4,9 +4,11 @@ import {
   CardBody,
   CardFooter,
   CardTitle,
+  Divider,
   Flex,
   FlexItem,
   Skeleton,
+  Title,
 } from '@patternfly/react-core';
 import StarRatings from 'react-star-ratings';
 import { useEffect, useState } from 'react';
@@ -185,6 +187,18 @@ export const ProductDetails = () => {
                   <FlexItem headers='h1'>${product.actual_price}</FlexItem>
                   <FlexItem>{product.about_product}</FlexItem>
                   <FlexItem>
+                    <Button
+                      variant='secondary'
+                      onClick={() => addToCart(1)}
+                      isLoading={isAddingToCart}
+                      isDisabled={isAddingToCart}
+                    >
+                      {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+                    </Button>
+                  </FlexItem>
+                  <br />
+                  <Divider />
+                  <FlexItem>
                     <div
                       style={{
                         display: 'flex',
@@ -193,46 +207,8 @@ export const ProductDetails = () => {
                         marginTop: '1rem',
                       }}
                     >
-                      <h3 style={{ margin: 0 }}>Reviews</h3>
-                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                        {reviewsQuery.data && reviewsQuery.data.length > 0 && (
-                          <Button
-                            variant='secondary'
-                            size='sm'
-                            onClick={handleSummarizeClick}
-                            style={{
-                              background:
-                                'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                              color: 'white',
-                              border: 'none',
-                              fontWeight: '600',
-                              boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-                              transition: 'all 0.3s ease',
-                              transform: 'translateY(0)',
-                              alignSelf: 'center',
-                            }}
-                            onMouseEnter={e => {
-                              e.currentTarget.style.transform =
-                                'translateY(-2px)';
-                              e.currentTarget.style.boxShadow =
-                                '0 6px 20px rgba(102, 126, 234, 0.6)';
-                            }}
-                            onMouseLeave={e => {
-                              e.currentTarget.style.transform = 'translateY(0)';
-                              e.currentTarget.style.boxShadow =
-                                '0 4px 15px rgba(102, 126, 234, 0.4)';
-                            }}
-                          >
-                            AI Summarize ✨
-                          </Button>
-                        )}
-                        <AddReviewInline
-                          onSubmit={async (rating, title, comment) => {
-                            await createReview.mutateAsync({ rating, title, comment });
-                          }}
-                          isSubmitting={createReview.isPending}
-                        />
-                      </div>
+                     <Title headingLevel={'h2'}>Reviews</Title>
+
                     </div>
                     {summaryQuery.isLoading ? (
                       <Skeleton width='200px' />
@@ -299,16 +275,45 @@ export const ProductDetails = () => {
               </CardBody>
               <CardFooter>
                 <Flex>
-                  <FlexItem>
-                    <Button
-                      variant='secondary'
-                      onClick={() => addToCart(1)}
-                      isLoading={isAddingToCart}
-                      isDisabled={isAddingToCart}
-                    >
-                      {isAddingToCart ? 'Adding...' : 'Add to Cart'}
-                    </Button>
-                  </FlexItem>
+                <FlexItem style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                        {reviewsQuery.data && reviewsQuery.data.length > 0 && (
+                          <Button
+                            variant='secondary'
+                            size='sm'
+                            onClick={handleSummarizeClick}
+                            style={{
+                              background:
+                                'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                              color: 'white',
+                              border: 'none',
+                              fontWeight: '600',
+                              boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+                              transition: 'all 0.3s ease',
+                              transform: 'translateY(0)',
+                              alignSelf: 'center',
+                            }}
+                            onMouseEnter={e => {
+                              e.currentTarget.style.transform =
+                                'translateY(-2px)';
+                              e.currentTarget.style.boxShadow =
+                                '0 6px 20px rgba(102, 126, 234, 0.6)';
+                            }}
+                            onMouseLeave={e => {
+                              e.currentTarget.style.transform = 'translateY(0)';
+                              e.currentTarget.style.boxShadow =
+                                '0 4px 15px rgba(102, 126, 234, 0.4)';
+                            }}
+                          >
+                            AI Summarize ✨
+                          </Button>
+                        )}
+                        <AddReviewInline
+                          onSubmit={async (rating, title, comment) => {
+                            await createReview.mutateAsync({ rating, title, comment });
+                          }}
+                          isSubmitting={createReview.isPending}
+                        />
+                      </FlexItem>
                 </Flex>
               </CardFooter>
             </Card>
